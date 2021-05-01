@@ -18,14 +18,19 @@ atexit.register(close_connection, conn)
 conn.set_trace_callback(print)
 c = conn.cursor()
 
+sql='ATTACH DATABASE "{}" AS sink;'.format(sink_db)
+c.execute(sql)
+
 sql='''
-    ATTACH DATABASE {} AS sink;
     INSERT INTO sink.snk(indx, i, a)
         SELECT indx, i, a
         FROM src
-        WHERE i < 25;
-    DETACH sink;
-    delete from src WHERE i < 25;
-'''.format(sink_db)
-print(sql)
+        WHERE i < 25;'''
+c.execute(sql)
+conn.commit()
+
+sql='DETACH sink;'
+c.execute(sql)
+
+sql='delete from src WHERE i < 25;'
 c.execute(sql)
