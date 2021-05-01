@@ -92,3 +92,6 @@ sqlite3 "$source_db" -cmd "select * from src" ".exit"
 echo
 echo sink:
 sqlite3 "$sink_db" -cmd "select * from snk" ".exit"
+
+# cleanup
+rm "$source_db" "$source_data" "$sink_db" "$sink_data"
