@@ -19,3 +19,9 @@ rm sink.csv sink.db source.csv source.db
 ## Status
 
 Working
+
+Key differences between piping commands to `sqlite3` and execiting them from Python.
+
+* DB name must be quoted in Python.
+* Python requires one SQL statement per `execute()`.
+* Python requires an explicit `commit()` before the secondary database can be detached.
