@@ -10,11 +10,8 @@ readonly source_data="source.csv"
 readonly sink_db="sink.db"
 readonly sink_data="sink.csv"
 
-if [ -e "$source_db" ]
-then
-    rm "$source_db"
-fi
-
+# cleanup if not previously done
+test -e "$source_db" && rm "$source_db"
 test -e "$sink_db" && rm "$sink_db"
 
 
@@ -71,6 +68,12 @@ echo
 echo sink:
 sqlite3 "$sink_db" -cmd "select * from snk" ".exit"
 
+if [ $# = 1 ]
+then
+    echo
+    echo database files prepared
+    exit 0
+fi
 
 # Perform the transfer
 
