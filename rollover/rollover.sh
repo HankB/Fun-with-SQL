@@ -15,7 +15,7 @@ then
     rm "$source_db"
 fi
 
-test -e "$sink_db" && rm "$sink_db"
+test -e "$sink_db" || rm "$sink_db"
 
 
 # Create source DB
@@ -63,6 +63,15 @@ cat <<EOF | sqlite3 "$sink_db"
 .import "$sink_data" snk
 EOF
 
+echo before
+echo source:
+sqlite3 "$source_db" -cmd "select * from src" ".exit"
+
+echo
+echo sink:
+sqlite3 "$sink_db" -cmd "select * from snk" ".exit"
+
+
 # Perform the transfer
 
 cat <<EOF | sqlite3 "$source_db"
@@ -70,11 +79,13 @@ cat <<EOF | sqlite3 "$source_db"
     INSERT INTO sink.snk(indx, i, a)
     SELECT indx, i, a
     FROM src
-    WHERE i < 25 ;
+    WHERE i < 25;
     DETACH sink;
+    delete from src WHERE i < 25;
 EOF
 
 echo
+echo after
 echo source:
 sqlite3 "$source_db" -cmd "select * from src" ".exit"
 
