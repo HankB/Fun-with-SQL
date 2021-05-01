@@ -15,7 +15,7 @@ then
     rm "$source_db"
 fi
 
-test -e "$sink_db" || rm "$sink_db"
+test -e "$sink_db" && rm "$sink_db"
 
 
 # Create source DB
