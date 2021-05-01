@@ -15,6 +15,7 @@ def close_connection(some_con):
 
 conn = sqlite3.connect(source_db)
 atexit.register(close_connection, conn)
+conn.set_trace_callback(print)
 c = conn.cursor()
 
 sql='''
