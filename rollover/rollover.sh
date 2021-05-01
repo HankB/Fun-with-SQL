@@ -44,7 +44,7 @@ EOF
 
 # Create source DB
 cat <<EOF | sqlite3 "$sink_db"
-CREATE TABLE src
+CREATE TABLE snk
     (indx INTEGER PRIMARY KEY, 
     i INTEGER, 
     a TEXT)
@@ -60,6 +60,24 @@ EOF
 # populate sink database
 cat <<EOF | sqlite3 "$sink_db"
 .mode csv
-.import "$sink_data" src
+.import "$sink_data" snk
 EOF
 
+# Perform the transfer
+
+cat <<EOF | sqlite3 "$source_db"
+    ATTACH DATABASE "$sink_db" AS sink;
+    INSERT INTO sink.snk(indx, i, a)
+    SELECT indx, i, a
+    FROM src
+    WHERE i < 25 ;
+    DETACH sink;
+EOF
+
+echo
+echo source:
+sqlite3 "$source_db" -cmd "select * from src" ".exit"
+
+echo
+echo sink:
+sqlite3 "$sink_db" -cmd "select * from snk" ".exit"
