@@ -11,9 +11,9 @@ rollover.sh
 ```
 rollover.sh x
 rollover.py
-rm sink.csv sink.db source.csv source.db
 sqlite3 sink.db -cmd "select * from snk" ""
 sqlite3 source.db -cmd "select * from src" ""
+rm sink.csv sink.db source.csv source.db
 ```
 
 ## Status
